@@ -1,0 +1,22 @@
+services:
+  game:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: neon-jumper
+    container_name: neon-jumper
+    platform: linux/amd64 # Ensure architecture compat
+    user: "1000:1000"
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+      - MAVEN_OPTS=-Xmx512m -Duser.home=/app
+    network_mode: host 
+    command: mvn spring-boot:run -Dmaven.repo.local=/app/.m2/repository -Duser.home=/app
+    # If mvnw is not generated yet, we might fallback to 'mvn' if installed in image, 
+    # but the image is just JDK. We should probably use a maven image or install maven.
+    # WAIT: eclipse-temurin does NOT have maven by default.
+    # Correction: I should use a maven base image or install maven in Dockerfile.
+    # Let's update Dockerfile to install maven.
