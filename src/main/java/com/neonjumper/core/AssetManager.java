@@ -33,6 +33,9 @@ public class AssetManager {
             case "wall" -> Color.MAGENTA;
             case "spike" -> Color.RED;
             case "enemy" -> Color.ORANGE;
+            case "monster" -> Color.DARKRED;
+            case "bird" -> Color.YELLOW;
+            case "coin" -> Color.GOLD;
             case "goal" -> Color.GREEN;
             case "goal_activated" -> Color.GOLD;
             default -> Color.WHITE;

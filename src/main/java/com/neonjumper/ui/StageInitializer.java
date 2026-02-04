@@ -3,6 +3,7 @@ package com.neonjumper.ui;
 import com.neonjumper.core.GameLoop;
 import com.neonjumper.service.InputManager;
 import com.neonjumper.service.UIService;
+import com.neonjumper.ui.StageReadyEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,7 +14,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StageInitializer implements ApplicationListener<JavaFxApplication.StageReadyEvent> {
+public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     private final GameLoop gameLoop;
     private final InputManager inputManager;
@@ -28,7 +29,7 @@ public class StageInitializer implements ApplicationListener<JavaFxApplication.S
     }
 
     @Override
-    public void onApplicationEvent(JavaFxApplication.StageReadyEvent event) {
+    public void onApplicationEvent(StageReadyEvent event) {
         Stage stage = event.getStage();
         
         Canvas canvas = new Canvas(WIDTH, HEIGHT);

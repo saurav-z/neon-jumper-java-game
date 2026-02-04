@@ -18,6 +18,15 @@ public class Player extends GameObject {
     private int lives = 3;
     private double invincibilityTimer = 0;
     private boolean onGround = false; 
+    
+    @Getter
+    private double nitroFuel = 1.0; // 0.0 to 1.0
+    private static final double NITRO_CONSUMPTION = 0.4; // per second
+    private static final double NITRO_RECOVERY = 0.15; // per second
+    private boolean isBoosting = false;
+
+    @Getter
+    private int score = 0;
 
     public enum Skin { CUBE, SPHERE }
     
@@ -37,13 +46,31 @@ public class Player extends GameObject {
             invincibilityTimer -= deltaTime;
         }
 
+        // Nitro Boost
+        isBoosting = input.isKeyPressed(KeyCode.SHIFT) && nitroFuel > 0.1;
+        double currentSpeed = MOVE_SPEED;
+        
+        if (isBoosting) {
+            currentSpeed *= 2.0;
+            nitroFuel -= NITRO_CONSUMPTION * deltaTime;
+            if (nitroFuel < 0) {
+                nitroFuel = 0;
+                isBoosting = false;
+            }
+            // Blue nitro particles
+            particleService.spawnDust(position.add(new Vector2D(width/2, height/2)), Color.BLUE, 2);
+        } else {
+            nitroFuel += NITRO_RECOVERY * deltaTime;
+            if (nitroFuel > 1.0) nitroFuel = 1.0;
+        }
+
         // Horizontal Movement
         double dx = 0;
         if (input.isKeyPressed(KeyCode.LEFT) || input.isKeyPressed(KeyCode.A)) {
-            dx -= MOVE_SPEED;
+            dx -= currentSpeed;
         }
         if (input.isKeyPressed(KeyCode.RIGHT) || input.isKeyPressed(KeyCode.D)) {
-            dx += MOVE_SPEED;
+            dx += currentSpeed;
         }
         
         this.velocity = new Vector2D(dx, this.velocity.y());
@@ -77,5 +104,9 @@ public class Player extends GameObject {
     
     public void resetLives() {
         this.lives = 3;
+    }
+
+    public void addScore(int points) {
+        this.score += points;
     }
 }

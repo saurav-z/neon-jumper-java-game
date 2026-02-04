@@ -5,6 +5,7 @@ import com.neonjumper.common.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.effect.Glow;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,12 +33,6 @@ public class RenderingEngine {
         drawBackgroundGrid(gc, camPos);
 
         for (Renderable entity : entities) {
-            if (entity instanceof com.neonjumper.entity.Player player) {
-                if (player.isInvincible() && (System.currentTimeMillis() / 100) % 2 == 0) {
-                    continue; // Skip rendering for flicker
-                }
-            }
-
             Vector2D pos = entity.getPosition().subtract(camPos);
             Rect bounds = entity.getBounds();
             
@@ -50,6 +45,48 @@ public class RenderingEngine {
                 } else {
                     gc.fillRect(pos.x(), pos.y(), bounds.width(), bounds.height());
                 }
+            } else if (entity.getType() == com.neonjumper.entity.GameObject.Type.BIRD) {
+                gc.setFill(Color.YELLOW);
+                gc.fillOval(pos.x(), pos.y(), bounds.width(), bounds.height());
+                // Simple wings
+                double wingY = Math.sin(System.currentTimeMillis() * 0.02) * 10;
+                gc.strokeLine(pos.x(), pos.y() + bounds.height()/2, pos.x() - 10, pos.y() + bounds.height()/2 - wingY);
+                gc.strokeLine(pos.x() + bounds.width(), pos.y() + bounds.height()/2, pos.x() + bounds.width() + 10, pos.y() + bounds.height()/2 - wingY);
+            } else if (entity.getType() == com.neonjumper.entity.GameObject.Type.MONSTER) {
+                gc.setFill(Color.DARKRED);
+                gc.fillRect(pos.x(), pos.y(), bounds.width(), bounds.height());
+                // Eyes
+                gc.setFill(Color.YELLOW);
+                gc.fillOval(pos.x() + 10, pos.y() + 10, 8, 8);
+                gc.fillOval(pos.x() + bounds.width() - 18, pos.y() + 10, 8, 8);
+            } else if (entity.getType() == com.neonjumper.entity.GameObject.Type.COIN) {
+                double time = System.currentTimeMillis() * 0.005;
+                double bob = Math.sin(time * 2) * 5;
+                double spin = Math.sin(time * 3); // -1 to 1 for 3D spin effect
+                
+                gc.save();
+                gc.translate(pos.x() + bounds.width()/2, pos.y() + bounds.height()/2 + bob);
+                gc.scale(Math.abs(spin), 1.0);
+                
+                gc.setEffect(new Glow(0.8));
+                gc.setFill(Color.GOLD);
+                gc.fillOval(-bounds.width()/2, -bounds.height()/2, bounds.width(), bounds.height());
+                
+                // Rim highlight
+                gc.setStroke(Color.WHITE);
+                gc.setLineWidth(2);
+                gc.strokeOval(-bounds.width()/2, -bounds.height()/2, bounds.width(), bounds.height());
+                
+                gc.restore();
+            } else if (entity.getType() == com.neonjumper.entity.GameObject.Type.MOVING_PLATFORM) {
+                gc.save();
+                gc.setEffect(new Glow(0.3));
+                gc.setFill(Color.web("#ff00ff")); // Distinct pinkish for moving
+                gc.fillRect(pos.x(), pos.y(), bounds.width(), bounds.height());
+                gc.setStroke(Color.WHITE);
+                gc.setLineWidth(1);
+                gc.strokeRect(pos.x(), pos.y(), bounds.width(), bounds.height());
+                gc.restore();
             } else if (assetName != null) {
                 Image img = assetManager.getAsset(assetName);
                 gc.drawImage(img, pos.x(), pos.y(), bounds.width(), bounds.height());
@@ -80,5 +117,6 @@ public class RenderingEngine {
         Vector2D getPosition();
         Rect getBounds();
         String getAssetName();
+        com.neonjumper.entity.GameObject.Type getType();
     }
 }

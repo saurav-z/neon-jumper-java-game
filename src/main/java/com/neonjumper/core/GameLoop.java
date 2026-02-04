@@ -1,5 +1,6 @@
 package com.neonjumper.core;
 
+import com.neonjumper.entity.Player;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 

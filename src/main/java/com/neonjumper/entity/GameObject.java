@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class GameObject implements RenderingEngine.Renderable {
-    public enum Type { PLAYER, WALL, SPIKE, GOAL, ENEMY }
+    public enum Type { PLAYER, WALL, SPIKE, GOAL, ENEMY, BIRD, MONSTER, COIN, MOVING_PLATFORM }
     
     protected Vector2D position;
     protected Vector2D velocity;
@@ -25,10 +25,14 @@ public abstract class GameObject implements RenderingEngine.Renderable {
         this.height = height;
         this.type = type;
         this.velocity = new Vector2D(0, 0);
-        this.isStatic = (type == Type.WALL || type == Type.SPIKE || type == Type.GOAL);
+        this.isStatic = (type == Type.WALL || type == Type.SPIKE || type == Type.GOAL || type == Type.COIN);
     }
 
     public abstract void update(double deltaTime);
+
+    public boolean isAffectedByGravity() {
+        return !isStatic;
+    }
 
     @Override
     public Rect getBounds() {

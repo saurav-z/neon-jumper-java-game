@@ -1,6 +1,7 @@
 package com.neonjumper.service;
 
 import com.neonjumper.core.GameLoop;
+import com.neonjumper.entity.Player;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -80,24 +82,44 @@ public class UIService {
         pane.setAlignment(Pos.TOP_LEFT);
         pane.setPickOnBounds(false);
 
+        VBox leftBox = new VBox(10);
+        leftBox.setPickOnBounds(false);
+
         Label hearts = new Label();
         hearts.setTextFill(Color.RED);
         hearts.setFont(Font.font("Arial", 40));
         
-        // Update hearts in a loop or binding
+        Label scoreLabel = new Label("SCORE: 0");
+        scoreLabel.setTextFill(Color.GOLD);
+        scoreLabel.setFont(Font.font("Arial Black", 24));
+
+        VBox nitroBox = new VBox(5);
+        Label nitroLabel = new Label("NITRO FUEL");
+        nitroLabel.setTextFill(Color.web("#00aaff"));
+        nitroLabel.setFont(Font.font("Arial", 12));
+        ProgressBar nitroBar = new ProgressBar(1.0);
+        nitroBar.setPrefWidth(200);
+        nitroBar.setStyle("-fx-accent: #00aaff;");
+        nitroBox.getChildren().addAll(nitroLabel, nitroBar);
+
+        leftBox.getChildren().addAll(hearts, scoreLabel, nitroBox);
+        pane.getChildren().add(leftBox);
+
+        // Update loop
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.millis(100), e -> {
-                if (levelService.getPlayer() != null) {
+                com.neonjumper.entity.Player p = levelService.getPlayer();
+                if (p != null) {
                     StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < levelService.getPlayer().getLives(); i++) sb.append("❤ ");
+                    for (int i = 0; i < p.getLives(); i++) sb.append("❤ ");
                     hearts.setText(sb.toString());
+                    scoreLabel.setText("SCORE: " + p.getScore());
+                    nitroBar.setProgress(p.getNitroFuel());
                 }
             })
         );
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-
-        pane.getChildren().add(hearts);
 
         hudLevelLabel = new Label("LEVEL 1");
         hudLevelLabel.setTextFill(Color.CYAN);
@@ -179,7 +201,7 @@ public class UIService {
         title.setTextFill(Color.CYAN);
         title.setFont(Font.font("Arial Black", 32));
         
-        Label controls = new Label("CONTROLS:\n[ W / SPACE ] JUMP\n[ A / D ] MOVE\n[ ESC ] SYSTEM PAUSE\n\nOBJECTIVE:\nREACH THE NEON GATE");
+        Label controls = new Label("CONTROLS:\n[ W / SPACE ] JUMP\n[ A / D ] MOVE\n[ SHIFT ] NITRO BOOST (Fast Right)\n[ ESC ] SYSTEM PAUSE\n\nOBJECTIVE:\nCOLLECT COINS & REACH THE GATE");
         controls.setTextFill(Color.WHITE);
         controls.setFont(Font.font("Consolas", 20));
         controls.setAlignment(Pos.CENTER);

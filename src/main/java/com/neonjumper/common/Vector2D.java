@@ -16,4 +16,10 @@ public record Vector2D(double x, double y) {
     public double length() {
         return Math.sqrt(x * x + y * y);
     }
+
+    public double distance(Vector2D other) {
+        double dx = x - other.x;
+        double dy = y - other.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }

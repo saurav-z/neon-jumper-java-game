@@ -1,12 +1,6 @@
 # Neon Jumper
 
-A polished, neon-themed 2D platformer built with **Java 21**, **Spring Boot 3**, and **JavaFX**. Features character selection with unique effects, 20 handcrafted levels, and a star-based progression system.
-
-## 🎮 Features
-- **Character Customization**: Choose between Cube and Sphere (with Comet trail effect).
-- **Progression**: 20 unique levels with star ratings and unlock requirements.
-- **Visuals**: Pulsing neon aesthetics, particle effects, and screen shake.
-- **Saves**: Local persistence for your progress and stars.
+A polished, neon-themed 2D platformer built with **Java 21**, **Spring Boot 3**, and **JavaFX**. Features character selection with unique effects, 20 procedurally generated levels, and a star-based progression system.
 
 ## 🚀 How to Run
 
@@ -49,5 +43,15 @@ Requires **Java 21** and **Maven**.
 ## 🕹️ Controls
 - **WASD / Arrows**: Move & Jump
 - **Space**: Jump
+- **Shift**: Nitro Boost (Fast Right/Left)
 - **ESC**: Pause / Menu
 - **Mouse**: Navigate UI
+
+## 🎮 Features
+- **Nitro System**: High-speed movement with regenerating fuel.
+- **Score System**: Collect gold coins for points.
+- **Moving Platforms**: Horizontal and vertical platforms with riding physics (move with the platform).
+- **Procedural Levels**: 20 unique levels with increasing difficulty and obstacles.
+- **Visual Polish**: 3D spinning coins, neon glow effects, and particle trails.
+- **Character Skins**: Choose between Neon Cube and Neon Comet (persistent trail).
+- **Save System**: Local persistence for progress and stars.
